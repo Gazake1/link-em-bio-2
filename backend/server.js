@@ -20,8 +20,8 @@ app.use(express.static(frontendPath));
 app.use("/api/users", usersRoutes);
 
 // ===== Home =====
-app.get("/", (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+app.get("/api", (req, res) => {
+  res.sendFile(path.join(frontendPath, "api.html"));
 });
 
 // ===== Frontend pages (bloqueando /api) =====
