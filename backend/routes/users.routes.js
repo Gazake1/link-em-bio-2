@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../database/db.js";
+import { pool } from "../database/db.js";
 import { validateCpf } from "../utils/validateCpf.js";
 import { validateEmail } from "../utils/valideEmail.js";
 
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
       data_nascimento,
     ];
 
-    const result = await db.query(query, values);
+    const result = await pool.query(query, values);
 
     return res.status(201).json({
       id: result.rows[0].id,
@@ -72,7 +72,7 @@ router.post("/", async (req, res) => {
 ========================= */
 router.get("/", async (req, res) => {
   try {
-    const result = await db.query(
+    const result = await pool.query(
       `SELECT id, nome, cpf, telefone, email, data_nascimento, criado_em
        FROM users
        ORDER BY criado_em DESC`

@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import usersRoutes from "./routes/users.routes.js";
 
+
 const app = express();
 const PORT = process.env.PORT;
 
