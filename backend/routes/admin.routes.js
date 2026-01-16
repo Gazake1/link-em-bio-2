@@ -1,93 +1,87 @@
 import { Router } from "express";
 import { pool } from "../database/db.js";
-import { authAdmin } from "../middlewares/auth.js";
+import { adminAuth } from "../middlewares/adminAuth.js";
 
 const router = Router();
 
 /* =========================
-   LISTAR usuários (ADMIN)
+   Listar usuários (admin)
 ========================= */
-router.get("/", authAdmin, async (req, res) => {
+router.get("/", adminAuth, async (req, res) => {
   try {
-    const query = `
+    const { rows } = await pool.query(`
       SELECT
         id,
         nome,
-        email,
-        telefone,
         cpf,
+        telefone,
+        email,
         data_nascimento,
-        ultima_visita,
         frequencia,
-        status_cliente,
-
-        CASE
-          WHEN frequencia >= 10 THEN 'gold'
-          WHEN frequencia >= 5 THEN 'silver'
-          ELSE 'none'
-        END AS engagement_rank,
-
+        status,
+        rank,
+        ultima_visita,
         criado_em
       FROM users
-      ORDER BY
-        frequencia DESC,
-        ultima_visita DESC NULLS LAST;
-    `;
+      ORDER BY criado_em DESC
+    `);
 
-    const result = await pool.query(query);
-    return res.json(result.rows);
+    res.json(rows);
   } catch (error) {
-    console.error("Erro ao listar usuários (admin):", error);
-    return res.status(500).json({ error: "Erro interno" });
+    console.error(error);
+    res.status(500).json({ error: "Erro ao listar usuários" });
   }
 });
 
 /* =========================
-   ATUALIZAR dados (ADMIN)
+   Atualizar usuário (admin)
 ========================= */
-router.put("/:id", authAdmin, async (req, res) => {
+router.put("/:id", adminAuth, async (req, res) => {
   const { id } = req.params;
-  const { ultima_visita, frequencia, status_cliente } = req.body;
 
-  if (frequencia < 0) {
-    return res.status(400).json({ error: "Frequência inválida" });
-  }
-
-  if (
-    status_cliente &&
-    !["never_visited", "active", "inactive"].includes(status_cliente)
-  ) {
-    return res.status(400).json({ error: "Status inválido" });
-  }
+  const {
+    nome,
+    telefone,
+    email,
+    data_nascimento,
+    frequencia,
+    status,
+    rank,
+    ultima_visita
+  } = req.body;
 
   try {
-    const query = `
+    await pool.query(
+      `
       UPDATE users
       SET
-        ultima_visita = $1,
-        frequencia = $2,
-        status_cliente = $3
-      WHERE id = $4
-      RETURNING *;
-    `;
+        nome = $1,
+        telefone = $2,
+        email = $3,
+        data_nascimento = $4,
+        frequencia = $5,
+        status = $6,
+        rank = $7,
+        ultima_visita = $8
+      WHERE id = $9
+      `,
+      [
+        nome,
+        telefone || null,
+        email,
+        data_nascimento,
+        frequencia || null,
+        status || null,
+        rank || "bronze",
+        ultima_visita || null,
+        id
+      ]
+    );
 
-    const values = [
-      ultima_visita ?? null,
-      frequencia ?? 0,
-      status_cliente ?? "never_visited",
-      id
-    ];
-
-    const result = await pool.query(query, values);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Usuário não encontrado" });
-    }
-
-    return res.json(result.rows[0]);
+    res.json({ success: true });
   } catch (error) {
-    console.error("Erro ao atualizar usuário (admin):", error);
-    return res.status(500).json({ error: "Erro interno" });
+    console.error(error);
+    res.status(500).json({ error: "Erro ao atualizar usuário" });
   }
 });
 

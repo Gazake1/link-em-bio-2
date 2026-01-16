@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <title>Dashboard Administrativo</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="./styles/dashboard.css" />
 </head>
 
@@ -17,7 +19,11 @@
 
         <div class="actions">
             <button class="btn logout" onclick="logout()">Sair</button>
-            <a href="painel-adm.santos-tech/dasboard.com" class="btn home">Voltar para o Home</a>
+
+            <!-- link corrigido -->
+            <a href="https://painel-adm.santos-tech.com" class="btn home">
+                Home
+            </a>
         </div>
     </header>
 
@@ -42,11 +48,59 @@
                 </tr>
             </thead>
 
-            <tbody id="lista"></tbody>
+            <tbody id="lista">
+                <!-- JS injeta os usuários aqui -->
+            </tbody>
         </table>
     </main>
 
+    <!-- JS -->
     <script src="./scripts/usuarios.js"></script>
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Editar usuário</h3>
+
+            <input type="hidden" id="edit-id" />
+
+            <label>Nome</label>
+            <input id="edit-nome" />
+
+            <label>Email</label>
+            <input id="edit-email" type="email" />
+
+            <label>Telefone</label>
+            <input id="edit-telefone" />
+
+            <label>Data de nascimento</label>
+            <input id="edit-nascimento" type="date" />
+
+            <label>Frequência</label>
+            <input id="edit-frequencia" />
+
+            <label>Status</label>
+            <select id="edit-status">
+                <option value="ativo">Ativo</option>
+                <option value="inativo">Inativo</option>
+                <option value="bloqueado">Bloqueado</option>
+            </select>
+
+            <label>Rank</label>
+            <select id="edit-rank">
+                <option value="bronze">Bronze</option>
+                <option value="prata">Prata</option>
+                <option value="ouro">Ouro</option>
+                <option value="diamante">Diamante</option>
+            </select>
+
+            <label>Última visita</label>
+            <input type="date" id="edit-visita" />
+
+            <div class="modal-actions">
+                <button onclick="salvarEdicao()">Salvar</button>
+                <button onclick="fecharModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
