@@ -12,7 +12,7 @@ form.addEventListener("submit", async (event) => {
   const data_nascimento = document.getElementById("data").value;
 
   try {
-    const response = await fetch("https://saiba-mais.santos-games.com/api/users", {
+    const response = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -29,11 +29,11 @@ form.addEventListener("submit", async (event) => {
     const data = await response.json();
 
     if (!response.ok) {
-      respota.textContent = (data.error || "Erro ao cadastrar");
+      resposta.textContent = (data.error || "Erro ao cadastrar");
       return;
     }
 
-    respota.textContent = ("Cadastro realizado com sucesso!");
+    resposta.textContent = ("Cadastro realizado com sucesso!");
     form.reset();
   } catch (error) {
     console.error(error);
