@@ -5,98 +5,84 @@
   <title>Dashboard Administrativo</title>
   <link rel="stylesheet" href="./styles/dashboard.css" />
 </head>
-
 <body>
 
-  <!-- ===== Header ===== -->
-  <header class="topbar">
-    <div class="title">
-      📊 <span>Dashboard Administrativo</span>
-    </div>
+<header class="topbar">
+  <div class="title">📊 <span>Dashboard Administrativo</span></div>
+  <div class="actions">
+    <button class="btn logout" onclick="logout()">Sair</button>
+    <a href="/" class="btn home">Voltar para o Home</a>
+  </div>
+</header>
 
-    <div class="actions">
-      <button class="btn logout" onclick="logout()">Sair</button>
-      <a href="/" class="btn home">Voltar para o Home</a>
-    </div>
-  </header>
+<main class="container">
+  <h2>Total de alunos: <span id="total">0</span></h2>
 
-  <!-- ===== Conteúdo ===== -->
-  <main class="container">
-    <h2>Total de alunos: <span id="total">0</span></h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Nascimento</th>
+        <th>Telefone</th>
+        <th>Email</th>
+        <th>CPF</th>
+        <th>Frequência</th>
+        <th>Rank</th>
+        <th>Status</th>
+        <th>Última visita</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+</main>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Nascimento</th>
-          <th>Telefone</th>
-          <th>Email</th>
-          <th>CPF</th>
-          <th>Frequência</th>
-          <th>Rank</th>
-          <th>Status</th>
-          <th>Última visita</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
+<!-- ===== MODAL ===== -->
+<div id="modalEditar" class="modal hidden">
+  <div class="modal-content">
+    <h3>Editar usuário</h3>
 
-      <tbody id="lista">
-        <!-- JS injeta os usuários aqui -->
-      </tbody>
-    </table>
-  </main>
+    <input type="hidden" id="edit-id">
 
-  <!-- ===== MODAL DE EDIÇÃO ===== -->
-  <div id="modal" class="modal hidden">
-    <div class="modal-content">
+    <label>Nome</label>
+    <input id="edit-nome">
 
-      <h3>Editar usuário</h3>
+    <label>Email</label>
+    <input id="edit-email">
 
-      <input type="hidden" id="edit-id" />
+    <label>Telefone</label>
+    <input id="edit-telefone">
 
-      <label>Nome</label>
-      <input id="edit-nome" />
+    <label>Data de nascimento</label>
+    <input type="date" id="edit-nascimento">
 
-      <label>Email</label>
-      <input id="edit-email" type="email" />
+    <label>Frequência</label>
+    <input type="number" id="edit-frequencia">
 
-      <label>Telefone</label>
-      <input id="edit-telefone" />
+    <label>Status</label>
+    <select id="edit-status">
+      <option value="Ativo">Ativo</option>
+      <option value="Inativo">Inativo</option>
+    </select>
 
-      <label>Data de nascimento</label>
-      <input id="edit-nascimento" type="date" />
+    <label>Rank</label>
+    <select id="edit-rank">
+      <option value="Bronze">Bronze</option>
+      <option value="Prata">Prata</option>
+      <option value="Ouro">Ouro</option>
+    </select>
 
-      <label>Frequência</label>
-      <input id="edit-frequencia" />
+    <label>Última visita</label>
+    <input type="date" id="edit-ultima_visita">
 
-      <label>Status</label>
-      <select id="edit-status">
-        <option value="ativo">Ativo</option>
-        <option value="inativo">Inativo</option>
-        <option value="bloqueado">Bloqueado</option>
-      </select>
-
-      <label>Rank</label>
-      <select id="edit-rank">
-        <option value="bronze">Bronze</option>
-        <option value="prata">Prata</option>
-        <option value="ouro">Ouro</option>
-        <option value="diamante">Diamante</option>
-      </select>
-
-      <label>Última visita</label>
-      <input type="date" id="edit-visita" />
-
-      <div class="modal-actions">
-        <button class="btn home" onclick="salvarEdicao()">Salvar</button>
-        <button class="btn logout" onclick="fecharModal()">Cancelar</button>
-      </div>
-
+    <div class="modal-actions">
+      <button class="btn edit" onclick="salvarEdicao()">Salvar</button>
+      <button class="btn delete" onclick="fecharModal()">Cancelar</button>
     </div>
   </div>
+</div>
 
-  <!-- ===== JS ===== -->
-  <script src="./scripts/usuarios.js"></script>
+<script src="./scripts/usuarios.js"></script>
 </body>
 </html>
