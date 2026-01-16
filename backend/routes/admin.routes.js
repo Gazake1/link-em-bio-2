@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { pool } from "../database/db.js";
-import { adminAuth } from "../middlewares/auth.js";
+import { authAdmin } from "../middlewares/auth.js";
 
 const router = Router();
 
 /* =========================
    Listar usuários (admin)
 ========================= */
-router.get("/", adminAuth, async (req, res) => {
+router.get("/", authAdmin, async (req, res) => {
   try {
     const { rows } = await pool.query(`
       SELECT
@@ -36,7 +36,7 @@ router.get("/", adminAuth, async (req, res) => {
 /* =========================
    Atualizar usuário (admin)
 ========================= */
-router.put("/:id", adminAuth, async (req, res) => {
+router.put("/:id", authAdmin, async (req, res) => {
   const { id } = req.params;
 
   const {
