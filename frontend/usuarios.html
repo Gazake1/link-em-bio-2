@@ -2,54 +2,44 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Usuários</title>
+  <title>Dashboard Administrativo</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
 </head>
 <body>
-  <h1>Usuários cadastrados</h1>
 
-  <button onclick="logout()">Sair</button>
+  <!-- ===== Header ===== -->
+  <header class="topbar">
+    <div class="title">
+      📊 <span>Dashboard Administrativo</span>
+    </div>
 
-  <ul id="lista"></ul>
+    <div class="actions">
+      <button class="btn logout" onclick="logout()">Sair</button>
+      <a href="/" class="btn home">Voltar para o Home</a>
+    </div>
+  </header>
 
-  <script>
-    async function carregarUsuarios() {
-      const token = localStorage.getItem("token");
+  <!-- ===== Conteúdo ===== -->
+  <main class="container">
+    <h2>Total de alunos: <span id="total">0</span></h2>
 
-      // se não tiver token, volta pro login
-      if (!token) {
-        window.location.href = "/login";
-        return;
-      }
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Data Nasc.</th>
+          <th>WhatsApp</th>
+          <th>Email</th>
+          <th>CPF</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
 
-      const res = await fetch("/api/users", {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
+      <tbody id="lista"></tbody>
+    </table>
+  </main>
 
-      if (res.status === 401 || res.status === 403) {
-        // token inválido ou expirado
-        localStorage.removeItem("token");
-        window.location.href = "/login";
-        return;
-      }
-
-      const users = await res.json();
-      const lista = document.getElementById("lista");
-
-      users.forEach(user => {
-        const li = document.createElement("li");
-        li.innerText = `${user.nome} - ${user.email}`;
-        lista.appendChild(li);
-      });
-    }
-
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-
-    carregarUsuarios();
-  </script>
+  <script src="./scripts/usuarios.js"></script>
 </body>
 </html>
