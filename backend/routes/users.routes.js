@@ -2,7 +2,7 @@ import { Router } from "express";
 import { pool } from "../database/db.js";
 import { validateCpf } from "../utils/validateCpf.js";
 import { validateEmail } from "../utils/valideEmail.js";
-import { authenticateToken } from "../middleware/auth.middleware.js"; // <- middleware JWT
+import { authenticateToken } from "../middlewares/auth.middlewares.js"; // <- middleware JWT
 
 const router = Router();
 
