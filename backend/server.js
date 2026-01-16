@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import usersRoutes from "./routes/users.routes.js";
 
 const app = express();
-const PORT = process.env.PORT || 5500;
+const PORT = process.env.PORT;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,5 +27,5 @@ app.get("/:page", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na Porta: ${PORT}`);
 });

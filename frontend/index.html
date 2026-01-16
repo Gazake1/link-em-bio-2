@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="description" content="Santos Games Arena — links oficiais" />
+    <meta name="theme-color" content="#000000" />
+    <title>Santos Games Arena | Links</title>
+    <link rel="icon" type="image/png" href="./image/logo-sg.png">
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="shards"></div>
+    <div class="grain"></div>
+
+    <main class="wrap">
+        <section class="shell" aria-label="Link na bio - Santos Games Arena">
+            <header>
+                <div class="logo" aria-label="Logo Santos Games Arena">
+                    <img src="./image/logo-sg.png" alt="Santos Games Arena" />
+                </div>
+
+                <h1>Santos Games Arena</h1>
+                <p class="subtitle">Av. nove de julho 1992 | Ribeirão Preto</p>
+
+                <div class="badge">Atalhos</div>
+            </header>
+
+            <nav class="grid" id="links" aria-label="Atalhos principais"></nav>
+
+            <footer>
+                © <span id="year"></span> Santos Games Arena • Ribeirão Preto - SP
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        // =========================
+        // CONFIG: edite seus cards aqui
+        // image: coloque o caminho do banner do produto/serviço
+        // =========================
+        const LINKS = [
+            { title: "CS Prime", desc: "Campeonato Presencial", url: "https://cs-prime.santos-games.com/", image: "./image/banners/cs-prime_sga.png", accent: "red" },
+            { title: "VCT Ribeirão", desc: "Campeonato Presencial", url: "#", disabled: true, image: "./image/banners/vct-ribeirao_sga.png", accent: "red" },
+            { title: "Twitch", desc: "Nossas lives", url: "https://www.twitch.tv/santosgamesesports", image: "./image/banners/capa03.png", accent: "red" },
+            { title: "Suporte", desc: "Fale conosco", url: "https://wa.me/5516992070533?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20algumas%20informa%C3%A7%C3%B5es", image: "./image/banners/capa02.png", accent: "red" },
+            { title: "Corujão", desc: "Das 21h as 08h", url: "./corujao.html", image: "./image/banners/capa001.png", accent: "red" },
+            { title: "Lan House", desc: "Jogue quando quiser", url: "#", disabled: true, image: "./image/banners/capa06.png", accent: "red" },
+            { title: "Aniversário", desc: "Seu aniversário gamer", url: "#", disabled: true, image: "./image/banners/capa07.png", accent: "red" },
+            { title: "Mix", desc: "Junte seus amigos", url: "#", disabled: true, image: "./image/banners/capa08.png", accent: "red" },
+            { title: "SGA", desc: "Em breve", url: "#", disabled: true, image: "./image/banners/capa09.png", accent: "red" },
+            { title: "YouTube", desc: "Em breve", url: "#", disabled: true, image: "./image/banners/capa04.png", accent: "red" },
+
+        ];
+
+        const arrowSvg = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+
+        const linksEl = document.getElementById("links");
+
+        function makeCard({ title, desc, url, image, accent, disabled }) {
+            const a = document.createElement("a");
+            a.className = "card";
+            a.setAttribute("aria-label", `${title} — abrir link`);
+            a.dataset.accent = accent === "red" ? "red" : "dark";
+
+            // Sanitização básica
+            const safeDesc = (desc ?? "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const safeTitle = (title ?? "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            // Estado desativado (Em breve)
+            if (disabled) {
+                a.classList.add("is-disabled");
+                a.setAttribute("aria-disabled", "true");
+                a.setAttribute("role", "link");
+                // não define href/target/rel -> evita clique e evita abrir aba
+            } else {
+                a.href = url;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";
+                a.removeAttribute("aria-disabled");
+            }
+
+            // Mantém sua estrutura atual (topo + divider + thumb), só adiciona o selo quando desativado
+            a.innerHTML = `
+    <div class="card-top">
+      <h3 class="card-title">${safeTitle}</h3>
+      <p class="card-desc">${safeDesc}</p>
+    </div>
+
+    <div class="card-divider" aria-hidden="true"></div>
+
+    <div class="thumb" aria-hidden="true">
+      ${image ? `<img src="${image}" alt="" loading="lazy" decoding="async">` : ``}
+    </div>
+
+  `;
+
+            const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches; // touch
+
+            function onMove(e) {
+                const r = a.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width;
+                const y = (e.clientY - r.top) / r.height;
+
+                a.style.setProperty("--mx", (x * 100).toFixed(2) + "%");
+                a.style.setProperty("--my", (y * 100).toFixed(2) + "%");
+
+                // tilt apenas em desktop (melhor estabilidade iOS)
+                if (!prefersReduced && !isCoarsePointer) {
+                    const ry = (x - 0.5) * 10;
+                    const rx = (0.5 - y) * 10;
+                    a.style.setProperty("--ry", ry.toFixed(2) + "deg");
+                    a.style.setProperty("--rx", rx.toFixed(2) + "deg");
+                }
+            }
+
+            function onLeave() {
+                a.style.setProperty("--mx", "20%");
+                a.style.setProperty("--my", "18%");
+                a.style.setProperty("--rx", "0deg");
+                a.style.setProperty("--ry", "0deg");
+            }
+
+            // Se estiver desativado, não precisa de listeners e evita qualquer “sensação de clique”
+            if (!disabled) {
+                a.addEventListener("pointermove", onMove);
+                a.addEventListener("pointerleave", onLeave);
+            } else {
+                // garante reset visual do tilt/brilho
+                onLeave();
+                // impede qualquer tentativa de clique (extra segurança)
+                a.addEventListener("click", (ev) => ev.preventDefault());
+            }
+
+            return a;
+        }
+
+        LINKS.forEach(item => linksEl.appendChild(makeCard(item)));
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>
