@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import usersRoutes from "./routes/users.routes.js";
 import authRoutes from "./routes/auth.routes.js"
-import adminUsersRoutes from "./routes/admin.users.routes.js";
+import adminUsersRoutes from "./routes/admin.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
