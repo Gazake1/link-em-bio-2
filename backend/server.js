@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import usersRoutes from "./routes/users.routes.js";
+import authRoutes from "./middlewares/auth.middlewares.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
