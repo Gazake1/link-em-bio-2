@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuários</title>
+</head>
+<body>
+  <h1>Usuários cadastrados</h1>
+
+  <button onclick="logout()">Sair</button>
+
+  <ul id="lista"></ul>
+
+  <script>
+    async function carregarUsuarios() {
+      const token = localStorage.getItem("token");
+
+      // se não tiver token, volta pro login
+      if (!token) {
+        window.location.href = "/login";
+        return;
+      }
+
+      const res = await fetch("/api/users", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        // token inválido ou expirado
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        return;
+      }
+
+      const users = await res.json();
+      const lista = document.getElementById("lista");
+
+      users.forEach(user => {
+        const li = document.createElement("li");
+        li.innerText = `${user.nome} - ${user.email}`;
+        lista.appendChild(li);
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+
+    carregarUsuarios();
+  </script>
+</body>
+</html>

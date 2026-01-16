@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+
+  <input id="username" placeholder="Usuário" />
+  <input id="password" type="password" placeholder="Senha" />
+  <button onclick="login()">Entrar</button>
+
+  <p id="msg"></p>
+
+  <script>
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/api/login/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        document.getElementById("msg").innerText = data.error;
+        return;
+      }
+
+      // salva o token no navegador
+      localStorage.setItem("token", data.token);
+
+      // redireciona para a página protegida
+      window.location.href = "/usuarios";
+    }
+  </script>
+</body>
+</html>
