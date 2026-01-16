@@ -2,18 +2,16 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 
 const router = Router();
-const SECRET_KEY = process.env.JWT_SECRET
+const SECRET_KEY = process.env.JWT_SECRET;
 
-const user = process.env.USER
-const pass = process.env.PASSWORD
-
-// Endpoint de login
 router.post("/", (req, res) => {
   const { username, password } = req.body;
 
-  // Aqui você define quem pode acessar. Exemplo fixo:
-  if (username === `${user}` && password === `${pass}`) {
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "2h" });
+  if (username === "admin" && password === "senha123") {
+    const token = jwt.sign({ username }, SECRET_KEY, {
+      expiresIn: "2h",
+    });
+
     return res.json({ token });
   }
 

@@ -31,6 +31,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
+app.use("/api/login", authRoutes);
+
+
 // ===== Frontend pages (BLOQUEANDO /api) =====
 app.get("/:page", (req, res) => {
   const page = req.params.page;
