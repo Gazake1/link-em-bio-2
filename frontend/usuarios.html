@@ -1,106 +1,102 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Dashboard Administrativo</title>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="./styles/dashboard.css" />
+  <meta charset="UTF-8" />
+  <title>Dashboard Administrativo</title>
+  <link rel="stylesheet" href="./styles/dashboard.css" />
 </head>
 
 <body>
 
-    <!-- ===== Header ===== -->
-    <header class="topbar">
-        <div class="title">
-            📊 <span>Dashboard Administrativo</span>
-        </div>
-
-        <div class="actions">
-            <button class="btn logout" onclick="logout()">Sair</button>
-
-            <!-- link corrigido -->
-            <a href="https://painel-adm.santos-tech.com" class="btn home">
-                Home
-            </a>
-        </div>
-    </header>
-
-    <!-- ===== Conteúdo ===== -->
-    <main class="container">
-        <h2>Total de alunos: <span id="total">0</span></h2>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Nascimento</th>
-                    <th>Telefone</th>
-                    <th>Email</th>
-                    <th>CPF</th>
-                    <th>Frequência</th>
-                    <th>Rank</th>
-                    <th>Status</th>
-                    <th>Última visita</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-
-            <tbody id="lista">
-                <!-- JS injeta os usuários aqui -->
-            </tbody>
-        </table>
-    </main>
-
-    <!-- JS -->
-    <script src="./scripts/usuarios.js"></script>
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Editar usuário</h3>
-
-            <input type="hidden" id="edit-id" />
-
-            <label>Nome</label>
-            <input id="edit-nome" />
-
-            <label>Email</label>
-            <input id="edit-email" type="email" />
-
-            <label>Telefone</label>
-            <input id="edit-telefone" />
-
-            <label>Data de nascimento</label>
-            <input id="edit-nascimento" type="date" />
-
-            <label>Frequência</label>
-            <input id="edit-frequencia" />
-
-            <label>Status</label>
-            <select id="edit-status">
-                <option value="ativo">Ativo</option>
-                <option value="inativo">Inativo</option>
-                <option value="bloqueado">Bloqueado</option>
-            </select>
-
-            <label>Rank</label>
-            <select id="edit-rank">
-                <option value="bronze">Bronze</option>
-                <option value="prata">Prata</option>
-                <option value="ouro">Ouro</option>
-                <option value="diamante">Diamante</option>
-            </select>
-
-            <label>Última visita</label>
-            <input type="date" id="edit-visita" />
-
-            <div class="modal-actions">
-                <button onclick="salvarEdicao()">Salvar</button>
-                <button onclick="fecharModal()">Cancelar</button>
-            </div>
-        </div>
+  <!-- ===== Header ===== -->
+  <header class="topbar">
+    <div class="title">
+      📊 <span>Dashboard Administrativo</span>
     </div>
-</body>
 
+    <div class="actions">
+      <button class="btn logout" onclick="logout()">Sair</button>
+      <a href="/" class="btn home">Voltar para o Home</a>
+    </div>
+  </header>
+
+  <!-- ===== Conteúdo ===== -->
+  <main class="container">
+    <h2>Total de alunos: <span id="total">0</span></h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Nascimento</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th>CPF</th>
+          <th>Frequência</th>
+          <th>Rank</th>
+          <th>Status</th>
+          <th>Última visita</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+
+      <tbody id="lista">
+        <!-- JS injeta os usuários aqui -->
+      </tbody>
+    </table>
+  </main>
+
+  <!-- ===== MODAL DE EDIÇÃO ===== -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+
+      <h3>Editar usuário</h3>
+
+      <input type="hidden" id="edit-id" />
+
+      <label>Nome</label>
+      <input id="edit-nome" />
+
+      <label>Email</label>
+      <input id="edit-email" type="email" />
+
+      <label>Telefone</label>
+      <input id="edit-telefone" />
+
+      <label>Data de nascimento</label>
+      <input id="edit-nascimento" type="date" />
+
+      <label>Frequência</label>
+      <input id="edit-frequencia" />
+
+      <label>Status</label>
+      <select id="edit-status">
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+        <option value="bloqueado">Bloqueado</option>
+      </select>
+
+      <label>Rank</label>
+      <select id="edit-rank">
+        <option value="bronze">Bronze</option>
+        <option value="prata">Prata</option>
+        <option value="ouro">Ouro</option>
+        <option value="diamante">Diamante</option>
+      </select>
+
+      <label>Última visita</label>
+      <input type="date" id="edit-visita" />
+
+      <div class="modal-actions">
+        <button class="btn home" onclick="salvarEdicao()">Salvar</button>
+        <button class="btn logout" onclick="fecharModal()">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== JS ===== -->
+  <script src="./scripts/usuarios.js"></script>
+</body>
 </html>
