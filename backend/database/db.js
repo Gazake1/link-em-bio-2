@@ -17,8 +17,3 @@ pool.on("connect", () => {
   console.log("PostgreSQL conectado");
 });
 
-await pool.query(`
-  SELECT table_schema, table_name
-  FROM information_schema.tables
-  WHERE table_name = 'users';
-`);

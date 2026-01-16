@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO public.users (
+      INSERT INTO users (
         nome,
         cpf,
         telefone,
@@ -95,7 +95,7 @@ router.get("/", async (req, res) => {
         email,
         data_nascimento,
         criado_em
-      FROM public.users
+      FROM users
       ORDER BY criado_em DESC;
     `;
 
