@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(express.static(frontendPath));
 
 // ===== API (PRIMEIRO, SEMPRE) =====
+app.use("/api/login", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/admin/users", adminUsersRoutes);
 
@@ -34,7 +35,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-app.use("/api/login", authRoutes);
 
 
 // ===== Frontend pages (BLOQUEANDO /api) =====

@@ -9,18 +9,9 @@ export function authAdmin(req, res, next) {
     });
   }
 
-  // Espera: "Bearer token"
-  const parts = authHeader.split(" ");
+  const [scheme, token] = authHeader.split(" ");
 
-  if (parts.length !== 2) {
-    return res.status(401).json({
-      error: "Token mal formatado",
-    });
-  }
-
-  const [scheme, token] = parts;
-
-  if (!/^Bearer$/i.test(scheme)) {
+  if (!/^Bearer$/i.test(scheme) || !token) {
     return res.status(401).json({
       error: "Token mal formatado",
     });
@@ -29,10 +20,9 @@ export function authAdmin(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // exemplo de verificação de admin
     if (!decoded.isAdmin) {
       return res.status(403).json({
-        error: "Acesso negado",
+        error: "Acesso restrito ao administrador",
       });
     }
 
