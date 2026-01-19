@@ -75,10 +75,10 @@ async function salvarEdicao() {
         email: document.getElementById("edit-email").value,
         telefone: document.getElementById("edit-telefone").value,
         data_nascimento: document.getElementById("edit-nascimento").value,
-        frequencia: document.getElementById("edit-frequencia").value,
-        status: document.getElementById("edit-status").value,
+        frequencia: Number(document.getElementById("edit-frequencia").value),
+        status_cliente: document.getElementById("edit-status").value, // ✅
         rank: document.getElementById("edit-rank").value,
-        ultima_visita: document.getElementById("edit-ultima_visita").value
+        ultima_visita: document.getElementById("edit-ultima_visita").value || null
     };
 
     await fetch(`/api/admin/users/${id}`, {
@@ -93,6 +93,7 @@ async function salvarEdicao() {
     fecharModal();
     carregarUsuarios();
 }
+
 
 function formatarData(data) {
     return new Date(data).toLocaleDateString("pt-BR");

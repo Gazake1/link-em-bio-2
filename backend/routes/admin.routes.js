@@ -51,7 +51,7 @@ router.put("/:id", authAdmin, async (req, res) => {
   } = req.body;
 
   try {
-    await pool.query(
+    const result = await pool.query(
       `
       UPDATE users
       SET
@@ -70,19 +70,24 @@ router.put("/:id", authAdmin, async (req, res) => {
         telefone || null,
         email,
         data_nascimento,
-        frequencia || null,
-        status_cliente || null,
+        frequencia ?? 0,
+        status_cliente,           // ✅ NUNCA null
         rank || "bronze",
         ultima_visita || null,
         id
       ]
     );
 
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error("Erro PUT users:", error);
     res.status(500).json({ error: "Erro ao atualizar usuário" });
   }
 });
+
 
 export default router;
