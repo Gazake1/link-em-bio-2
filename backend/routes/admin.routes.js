@@ -36,58 +36,40 @@ router.get("/", authAdmin, async (req, res) => {
 /* =========================
    Atualizar usuário (admin)
 ========================= */
-router.put("/:id", authAdmin, async (req, res) => {
+router.get("/:id", authAdmin, async (req, res) => {
   const { id } = req.params;
-
-  const {
-    nome,
-    telefone,
-    email,
-    data_nascimento,
-    frequencia,
-    status_cliente,
-    rank,
-    ultima_visita
-  } = req.body;
 
   try {
     const result = await pool.query(
       `
-      UPDATE users
-      SET
-        nome = $1,
-        telefone = $2,
-        email = $3,
-        data_nascimento = $4,
-        frequencia = $5,
-        status_cliente = $6,
-        rank = $7,
-        ultima_visita = $8
-      WHERE id = $9
-      `,
-      [
+      SELECT
+        id,
         nome,
-        telefone || null,
+        cpf,
+        telefone,
         email,
         data_nascimento,
-        frequencia ?? 0,
-        status_cliente,           // ✅ NUNCA null
-        rank || "bronze",
-        ultima_visita || null,
-        id
-      ]
+        frequencia,
+        status_cliente,
+        rank,
+        ultima_visita
+      FROM users
+      WHERE id = $1
+      `,
+      [id]
     );
 
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Usuário não encontrado" });
     }
 
-    res.json({ success: true });
+    res.json(result.rows[0]);
   } catch (error) {
-    console.error("Erro PUT users:", error);
-    res.status(500).json({ error: "Erro ao atualizar usuário" });
+    console.error("Erro GET users/:id:", error);
+    res.status(500).json({ error: "Erro ao buscar usuário" });
   }
 });
+
 
 
 export default router;
