@@ -161,3 +161,15 @@ td:nth-child(9) { /* Status */
   justify-content: space-between;
   margin-top: 20px;
 }
+
+.ativo{
+  color: #00e600;
+}
+
+.nuncaV{
+  color: red;
+}
+
+.idle{
+  color: yellow;
+}
