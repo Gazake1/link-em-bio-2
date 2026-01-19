@@ -11,7 +11,7 @@ export function authAdmin(req, res, next) {
 
   const [scheme, token] = authHeader.split(" ");
 
-  if (!/^Bearer$/i.test(scheme) || !token) {
+  if (scheme !== "Bearer" || !token) {
     return res.status(401).json({
       error: "Token mal formatado",
     });
@@ -22,7 +22,7 @@ export function authAdmin(req, res, next) {
 
     if (!decoded.isAdmin) {
       return res.status(403).json({
-        error: "Acesso restrito ao administrador",
+        error: "Acesso negado",
       });
     }
 
