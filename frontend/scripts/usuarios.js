@@ -1,30 +1,31 @@
-let usuariosCache = [];
+/* =========================
+   ESTADO GLOBAL
+========================= */
 let currentPage = 1;
 const limit = 10;
 
 let searchTerm = "";
-let filtroStatus = "";
 let filtroRank = "";
+let filtroStatus = "";
+let filtroFreq = "";
+
+let usuariosCache = [];
 
 /* =========================
    CARREGAR USUÁRIOS
 ========================= */
 async function carregarUsuarios(page = 1) {
   const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "/login.html";
-    return;
-  }
-
   currentPage = page;
 
-  const params = new URLSearchParams({
-    page,
-    limit,
-    search: searchTerm,
-    status: filtroStatus,
-    rank: filtroRank
-  });
+  const params = new URLSearchParams();
+  params.append("page", page);
+  params.append("limit", limit);
+
+  if (searchTerm) params.append("search", searchTerm);
+  if (filtroRank) params.append("rank", filtroRank);
+  if (filtroStatus) params.append("status_cliente", filtroStatus);
+  if (filtroFreq) params.append("freq_min", filtroFreq);
 
   const res = await fetch(`/api/admin/users?${params.toString()}`, {
     headers: {
@@ -32,18 +33,14 @@ async function carregarUsuarios(page = 1) {
     }
   });
 
-  if (!res.ok) {
-    console.error("Erro ao carregar usuários");
-    return;
-  }
-
   const data = await res.json();
 
-  usuariosCache = data.users; // 🔥 ESSENCIAL
+  usuariosCache = data.users;
+
   document.getElementById("total").textContent = data.total;
 
   renderizarTabela(data.users);
-  criarPaginacao(data.totalPages, data.page);
+  criarPaginacao(data.page, data.totalPages);
 }
 
 /* =========================
@@ -52,6 +49,15 @@ async function carregarUsuarios(page = 1) {
 function renderizarTabela(users) {
   const tbody = document.getElementById("lista");
   tbody.innerHTML = "";
+
+  if (!users.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="11" style="text-align:center;">Nenhum usuário encontrado</td>
+      </tr>
+    `;
+    return;
+  }
 
   users.forEach(user => {
     tbody.innerHTML += `
@@ -63,11 +69,21 @@ function renderizarTabela(users) {
         <td>${user.email}</td>
         <td>${user.cpf}</td>
         <td>${user.frequencia}</td>
-        <td>${user.rank}</td>
-        <td>${user.status_cliente}</td>
-        <td>${user.ultima_visita ? formatarData(user.ultima_visita) : "-"}</td>
         <td>
-          <button class="btn edit" onclick="abrirModal(${user.id})">
+          <span class="badge badge-${user.rank.toLowerCase()}">
+            ${user.rank}
+          </span>
+        </td>
+        <td>
+          <span class="badge status-${user.status_cliente}">
+            ${user.status_cliente}
+          </span>
+        </td>
+        <td>
+          ${user.ultima_visita ? formatarData(user.ultima_visita) : "-"}
+        </td>
+        <td>
+          <button class="edit" onclick="abrirModal(${user.id})">
             Editar
           </button>
         </td>
@@ -77,10 +93,56 @@ function renderizarTabela(users) {
 }
 
 /* =========================
+   PAGINAÇÃO PROGRESSIVA
+========================= */
+function criarPaginacao(paginaAtual, totalPages) {
+  const container = document.getElementById("pagination");
+  container.innerHTML = "";
+
+  if (totalPages <= 1) return;
+
+  // botão anterior
+  if (paginaAtual > 1) {
+    container.innerHTML += `
+      <button onclick="carregarUsuarios(${paginaAtual - 1})">
+        ←
+      </button>
+    `;
+  }
+
+  // páginas progressivas
+  for (let i = 1; i <= totalPages; i++) {
+    if (
+      i === 1 ||
+      i === totalPages ||
+      (i >= paginaAtual - 1 && i <= paginaAtual + 1)
+    ) {
+      container.innerHTML += `
+        <button
+          class="${i === paginaAtual ? "active" : ""}"
+          onclick="carregarUsuarios(${i})"
+        >
+          ${i}
+        </button>
+      `;
+    }
+  }
+
+  // botão próximo
+  if (paginaAtual < totalPages) {
+    container.innerHTML += `
+      <button onclick="carregarUsuarios(${paginaAtual + 1})">
+        →
+      </button>
+    `;
+  }
+}
+
+/* =========================
    BUSCA
 ========================= */
 function buscar(valor) {
-  searchTerm = valor;
+  searchTerm = valor.trim();
   carregarUsuarios(1);
 }
 
@@ -88,8 +150,10 @@ function buscar(valor) {
    FILTROS
 ========================= */
 function filtrar() {
-  filtroStatus = document.getElementById("filter-status").value;
   filtroRank = document.getElementById("filter-rank").value;
+  filtroStatus = document.getElementById("filter-status").value;
+  filtroFreq = document.getElementById("filter-freq").value;
+
   carregarUsuarios(1);
 }
 
@@ -104,7 +168,8 @@ function abrirModal(id) {
   document.getElementById("edit-nome").value = user.nome;
   document.getElementById("edit-email").value = user.email;
   document.getElementById("edit-telefone").value = user.telefone || "";
-  document.getElementById("edit-nascimento").value = user.data_nascimento?.split("T")[0];
+  document.getElementById("edit-nascimento").value =
+    user.data_nascimento?.split("T")[0] || "";
   document.getElementById("edit-frequencia").value = user.frequencia;
   document.getElementById("edit-status").value = user.status_cliente;
   document.getElementById("edit-rank").value = user.rank;
@@ -133,7 +198,8 @@ async function salvarEdicao() {
     frequencia: Number(document.getElementById("edit-frequencia").value),
     status_cliente: document.getElementById("edit-status").value,
     rank: document.getElementById("edit-rank").value,
-    ultima_visita: document.getElementById("edit-ultima_visita").value || null
+    ultima_visita:
+      document.getElementById("edit-ultima_visita").value || null
   };
 
   await fetch(`/api/admin/users/${id}`, {

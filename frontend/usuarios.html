@@ -1,46 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <title>Dashboard Administrativo</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="./styles/dashboard.css" />
 </head>
 
 <body>
 
+  <!-- ===== TOPBAR ===== -->
   <header class="topbar">
-    <div class="title">📊 <span>Dashboard Administrativo</span></div>
+    <div class="title">
+      📊 <span>Dashboard Administrativo</span>
+    </div>
+
     <div class="actions">
       <button class="btn logout" onclick="logout()">Sair</button>
       <a href="/" class="btn home">Voltar para o Home</a>
     </div>
   </header>
 
-  <div class="filters">
-    <input type="text" placeholder="Buscar por nome, email ou CPF" oninput="buscar(this.value)" />
+  <!-- ===== FILTROS ===== -->
+  <section class="filters">
+    <input
+      type="text"
+      id="filter-search"
+      placeholder="Buscar por nome, email ou CPF"
+      oninput="buscar(this.value)"
+    />
 
-    <select id="filter-rank" onchange="carregarUsuarios()">
-      <option value="">Rank</option>
-      <option value="bronze">Bronze</option>
-      <option value="prata">Prata</option>
-      <option value="ouro">Ouro</option>
+    <select id="filter-rank" onchange="filtrar()">
+      <option value="">Todos os ranks</option>
+      <option value="Bronze">Bronze</option>
+      <option value="Prata">Prata</option>
+      <option value="Ouro">Ouro</option>
     </select>
 
-    <select id="filter-status" onchange="carregarUsuarios()">
-      <option value="">Status</option>
-      <option value="ativo">Ativo</option>
-      <option value="inativo">Inativo</option>
+    <select id="filter-status" onchange="filtrar()">
+      <option value="">Todos os status</option>
       <option value="never_visited">Nunca visitou</option>
+      <option value="active">Ativo</option>
+      <option value="inactive">Inativo</option>
     </select>
 
-    <input type="number" id="filter-freq" placeholder="Freq mínima" onchange="carregarUsuarios()" />
-  </div>
+    <input
+      type="number"
+      id="filter-freq"
+      placeholder="Freq mínima"
+      min="0"
+      onchange="filtrar()"
+    />
+  </section>
 
-
+  <!-- ===== CONTEÚDO ===== -->
   <main class="container">
-    <h2>Total de alunos: <span id="total">0</span></h2>
+    <h2>
+      Total de alunos:
+      <span id="total">0</span>
+    </h2>
 
+    <!-- ===== TABELA ===== -->
     <table>
       <thead>
         <tr>
@@ -57,45 +78,43 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody id="lista"></tbody>
+
+      <tbody id="lista">
+        <!-- preenchido via JS -->
+      </tbody>
     </table>
 
-    <div class="pagination">
-      <button onclick="carregarUsuarios(1)">1</button>
-      <button onclick="carregarUsuarios(2)">2</button>
-      <button onclick="carregarUsuarios(3)">3</button>
-    </div>
-
+    <!-- ===== PAGINAÇÃO (DINÂMICA) ===== -->
+    <div id="pagination" class="pagination"></div>
   </main>
 
-
-  <!-- ===== MODAL ===== -->
+  <!-- ===== MODAL EDITAR ===== -->
   <div id="modalEditar" class="modal hidden">
     <div class="modal-content">
       <h3>Editar usuário</h3>
 
-      <input type="hidden" id="edit-id">
+      <input type="hidden" id="edit-id" />
 
       <label>Nome</label>
-      <input id="edit-nome">
+      <input id="edit-nome" />
 
       <label>Email</label>
-      <input id="edit-email">
+      <input id="edit-email" />
 
       <label>Telefone</label>
-      <input id="edit-telefone">
+      <input id="edit-telefone" />
 
       <label>Data de nascimento</label>
-      <input type="date" id="edit-nascimento">
+      <input type="date" id="edit-nascimento" />
 
       <label>Frequência</label>
-      <input type="number" id="edit-frequencia">
+      <input type="number" id="edit-frequencia" min="0" />
 
       <label>Status</label>
       <select id="edit-status">
-        <option value="never_visited" class="nuncaV">Nunca visitou</option>
-        <option value="active" class="ativo">Ativo</option>
-        <option value="inactive" class="idle">Inativo</option>
+        <option value="never_visited">Nunca visitou</option>
+        <option value="active">Ativo</option>
+        <option value="inactive">Inativo</option>
       </select>
 
       <label>Rank</label>
@@ -106,7 +125,7 @@
       </select>
 
       <label>Última visita</label>
-      <input type="date" id="edit-ultima_visita">
+      <input type="date" id="edit-ultima_visita" />
 
       <div class="modal-actions">
         <button class="btn edit" onclick="salvarEdicao()">Salvar</button>
@@ -115,7 +134,7 @@
     </div>
   </div>
 
+  <!-- JS -->
   <script src="./scripts/usuarios.js"></script>
 </body>
-
 </html>

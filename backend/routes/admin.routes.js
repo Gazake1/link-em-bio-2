@@ -8,61 +8,57 @@ const router = Router();
    Listar usuários (admin)
 ========================= */
 router.get("/", authAdmin, async (req, res) => {
+  const {
+    page = 1,
+    limit = 10,
+    search = "",
+    rank,
+    status_cliente,
+    freq_min
+  } = req.query;
+
+  const offset = (page - 1) * limit;
+  const values = [];
+  let where = "WHERE 1=1";
+
+  if (search) {
+    values.push(`%${search.toLowerCase()}%`);
+    where += ` AND (
+      LOWER(nome) LIKE $${values.length}
+      OR LOWER(email) LIKE $${values.length}
+      OR cpf LIKE $${values.length}
+    )`;
+  }
+
+  if (rank) {
+    values.push(rank);
+    where += ` AND rank = $${values.length}`;
+  }
+
+  if (status_cliente) {
+    values.push(status_cliente);
+    where += ` AND status_cliente = $${values.length}`;
+  }
+
+  if (freq_min) {
+    values.push(Number(freq_min));
+    where += ` AND frequencia >= $${values.length}`;
+  }
+
   try {
-    const {
-      page = 1,
-      limit = 10,
-      search = "",
-      status,
-      rank
-    } = req.query;
+    const totalQuery = `
+      SELECT COUNT(*) FROM users
+      ${where}
+    `;
 
-    const offset = (page - 1) * limit;
-
-    let where = [];
-    let values = [];
-    let idx = 1;
-
-    // 🔍 BUSCA (nome, email ou CPF)
-    if (search) {
-      where.push(`
-        (
-          nome ILIKE $${idx}
-          OR email ILIKE $${idx}
-          OR cpf ILIKE $${idx}
-        )
-      `);
-      values.push(`%${search}%`);
-      idx++;
-    }
-
-    // 🟡 FILTRO STATUS
-    if (status) {
-      where.push(`status_cliente = $${idx}`);
-      values.push(status);
-      idx++;
-    }
-
-    // 🟣 FILTRO RANK
-    if (rank) {
-      where.push(`rank = $${idx}`);
-      values.push(rank);
-      idx++;
-    }
-
-    const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
-
-    // 🔢 TOTAL
-    const totalResult = await pool.query(
-      `SELECT COUNT(*) FROM users ${whereSQL}`,
-      values
-    );
-
+    const totalResult = await pool.query(totalQuery, values);
     const total = Number(totalResult.rows[0].count);
+    const totalPages = Math.ceil(total / limit);
 
-    // 📄 DADOS
-    const usersResult = await pool.query(
-      `
+    values.push(limit);
+    values.push(offset);
+
+    const usersQuery = `
       SELECT
         id,
         nome,
@@ -75,25 +71,26 @@ router.get("/", authAdmin, async (req, res) => {
         rank,
         ultima_visita
       FROM users
-      ${whereSQL}
+      ${where}
       ORDER BY criado_em DESC
-      LIMIT $${idx} OFFSET $${idx + 1}
-      `,
-      [...values, limit, offset]
-    );
+      LIMIT $${values.length - 1}
+      OFFSET $${values.length}
+    `;
+
+    const usersResult = await pool.query(usersQuery, values);
 
     res.json({
+      users: usersResult.rows,
       total,
       page: Number(page),
-      totalPages: Math.ceil(total / limit),
-      users: usersResult.rows
+      totalPages
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Erro GET admin/users:", error);
     res.status(500).json({ error: "Erro ao listar usuários" });
   }
 });
+
 
 
 
