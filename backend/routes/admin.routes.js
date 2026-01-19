@@ -45,7 +45,7 @@ router.put("/:id", authAdmin, async (req, res) => {
     email,
     data_nascimento,
     frequencia,
-    status,
+    status_cliente,
     rank,
     ultima_visita
   } = req.body;
@@ -60,7 +60,7 @@ router.put("/:id", authAdmin, async (req, res) => {
         email = $3,
         data_nascimento = $4,
         frequencia = $5,
-        status = $6,
+        status_cliente = $6,
         rank = $7,
         ultima_visita = $8
       WHERE id = $9
@@ -71,7 +71,7 @@ router.put("/:id", authAdmin, async (req, res) => {
         email,
         data_nascimento,
         frequencia || null,
-        status || null,
+        status_cliente || null,
         rank || "bronze",
         ultima_visita || null,
         id
