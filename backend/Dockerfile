@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # 7. Inicia o servidor
-CMD ["node", "src/server.js"]
+CMD ["node", "server.js"]
