@@ -34,7 +34,7 @@ async function carregarUsuarios() {
       <td>${user.email}</td>
       <td>${user.cpf}</td>
       <td>${user.frequencia ?? 0}</td>
-      <td>${user.rank}</td>
+      <td><span class="badge badge-${user.rank.toLowerCase()}">${user.rank}</span></td>
       <td>${user.status_cliente}</td>
       <td>${user.ultima_visita ? formatarData(user.ultima_visita) : "-"}</td>
       <td>

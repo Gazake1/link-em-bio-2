@@ -173,3 +173,26 @@ td:nth-child(9) { /* Status */
 .idle{
   color: yellow;
 }
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.badge-bronze {
+  background-color: #cd7f32;
+  color: #fff;
+}
+
+.badge-prata {
+  background-color: #c0c0c0;
+  color: #000;
+}
+
+.badge-ouro {
+  background-color: #ffd700;
+  color: #000;
+}

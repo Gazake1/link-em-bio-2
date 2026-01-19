@@ -5,6 +5,9 @@ import fs from "fs";
 import usersRoutes from "./routes/users.routes.js";
 import authRoutes from "./routes/auth.routes.js"
 import adminUsersRoutes from "./routes/admin.routes.js";
+import cron from "node-cron";
+import { updateUsersStatus } from "./jobs/updateUsersStatus.js";
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -58,6 +61,13 @@ app.get("/:page", (req, res) => {
 
   res.sendFile(filePath);
 });
+
+// Roda todo dia à meia-noite
+cron.schedule("0 0 * * *", async () => {
+  console.log("[CRON] Atualizando status e rank dos usuários...");
+  await updateUsersStatus();
+});
+
 
 // ===== Start =====
 app.listen(PORT, () => {
