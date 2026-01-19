@@ -6,7 +6,7 @@ import usersRoutes from "./routes/users.routes.js";
 import authRoutes from "./routes/auth.routes.js"
 import adminUsersRoutes from "./routes/admin.routes.js";
 import cron from "node-cron";
-import { updateUsersStatus } from "./jobs/updateUsersStatus.js";
+import { updateUsersStatus } from "./jobs/updateUserStatus.js";
 
 
 const app = express();
