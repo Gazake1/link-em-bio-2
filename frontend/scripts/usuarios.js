@@ -55,7 +55,7 @@ function abrirModal(id) {
     document.getElementById("edit-telefone").value = user.telefone || "";
     document.getElementById("edit-nascimento").value = user.data_nascimento?.split("T")[0];
     document.getElementById("edit-frequencia").value = user.frequencia || 0;
-    document.getElementById("edit-status").value = user.status;
+    document.getElementById("edit-status").value = user.status_cliente;
     document.getElementById("edit-rank").value = user.rank;
     document.getElementById("edit-ultima_visita").value = user.ultima_visita?.split("T")[0] || "";
 

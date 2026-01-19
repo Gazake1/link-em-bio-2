@@ -18,7 +18,7 @@ router.get("/", authAdmin, async (req, res) => {
         email,
         data_nascimento,
         frequencia,
-        status,
+        status_cliente,
         rank,
         ultima_visita,
         criado_em
